@@ -3,17 +3,41 @@ import os
 path = 'C:/Users/batu9/OneDrive/Documents/Code/Python/Interactive Population and Volcano Map'
 os.chdir(path)
 
+import pandas
+data = pandas.read_csv("Webmap_datasources\Volcanoes.txt")
+lat = list(data["LAT"])
+lon = list(data["LON"])
+elev = list(data["ELEV"])
+name = list(data["NAME"])
+
+#format popup
+html = """<h4>Volcano information:</h4>
+Name: %s </br>
+Elevation: %s m </br>
+Latitude: %s </br>
+Longitude %s </br>
+"""
+
 #creates map with central location and zoom defined
 import folium
 map = folium.Map(location=[45.3288, -121.6625], zoom_start=6, tiles="Stamen Terrain")
 
 fg = folium.FeatureGroup(name="InteractiveMap")
-fg.add_child(folium.Marker(
-    [45.3288, -121.6625], 
-    popup="<i>Mt. Hood Meadows</i>", 
+
+for lt, ln, el, nm in zip(lat, lon, elev, name): #iteration through lat,lon,elev,etc.. lists, extracts to variables
+    
+    iframe = folium.IFrame(html=html %(nm, el, lt, ln), width=200, height=150)
+
+    fg.add_child(folium.Marker(
+    location=[lt, ln], 
+    popup=folium.Popup(iframe), 
     icon=folium.Icon(color='red', icon="info-sign")))
 
 map.add_child(fg)
 
 map.save("InteractiveMap.html")
 
+#---to test import and read data using pandas (in powershell)---
+#>>>import pandas
+#>>>data = pandas.read_csv("Volcanoes.txt")
+#>>>data 
