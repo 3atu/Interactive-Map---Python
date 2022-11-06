@@ -1,0 +1,19 @@
+#sets the directory to save the file to
+import os
+path = 'C:/Users/batu9/OneDrive/Documents/Code/Python/Interactive Population and Volcano Map'
+os.chdir(path)
+
+#creates map with central location and zoom defined
+import folium
+map = folium.Map(location=[45.3288, -121.6625], zoom_start=6, tiles="Stamen Terrain")
+
+fg = folium.FeatureGroup(name="InteractiveMap")
+fg.add_child(folium.Marker(
+    [45.3288, -121.6625], 
+    popup="<i>Mt. Hood Meadows</i>", 
+    icon=folium.Icon(color='red', icon="info-sign")))
+
+map.add_child(fg)
+
+map.save("InteractiveMap.html")
+
